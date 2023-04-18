@@ -6,6 +6,7 @@ function craftLogic()
     io.write("2. Reinforced Alloy\n")
     io.write("3. Infused Alloy\n")
     io.write("4. Control Circuit\n")
+    io.write("5. Steel\n")
  
     craftNumber = tonumber(io.read())
  
@@ -17,6 +18,8 @@ function craftLogic()
         shell.run("infused")
     elseif craftNumber == 4 then
         shell.run("control")
+    elseif craftNumber == 5 then
+        shell.run("steel")
     else 
         print("Index: " .. craftNumber .. " is Invalid, Please try again")
         sleep(3)
