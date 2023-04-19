@@ -14,6 +14,31 @@ function awaitPermission()
     end
 end
 
+function findItem(name)
+    for search = 16, 1, -1 do
+        turtle.select(search)
+        if turtle.getItemDetail() ~= nil then
+            if turtle.getItemDetail().name == name then -- block
+                return search
+            end
+        end
+    end
+
+    return 1
+end
+
+function checkFuel()
+    if (turtle.getFuelLevel() / turtle.getFuelLimit()) >= 0.5 then
+        turtle.select(findItem("linkedstorage:ender_chest"))
+        turtle.place()
+
+        turtle.suck(64)
+        turtle.select(findItem("minecraft:coal"))
+        turtle.refuel()
+        turtle.dig()
+    end
+end
+
 function placeLoader() 
     for search = 16, 1, -1 do
         turtle.select(search)
@@ -91,5 +116,6 @@ while true do
     if permission == true then
         permission = false
         crossChunk()
+        checkFuel()
     end
 end

@@ -20,6 +20,18 @@ function findItem(name)
     return 1
 end
 
+function checkFuel()
+    if (turtle.getFuelLevel() / turtle.getFuelLimit()) >= 0.5 then
+        turtle.select(findItem("linkedstorage:ender_chest"))
+        turtle.place()
+
+        turtle.suck(64)
+        turtle.select(findItem("minecraft:coal"))
+        turtle.refuel()
+        turtle.dig()
+    end
+end
+
 function moveLogic()
     thread = coroutine.create(broadcastProceed)
     coroutine.resume(thread)
@@ -27,7 +39,7 @@ function moveLogic()
     while true do
         id, message = rednet.receive()
         if message == "chunksafe" then
-            coroutine.yield(thread)
+            coroutine.close(thread)
             break
         end
 
@@ -132,4 +144,5 @@ while true do
     end
 
     moveLogic()
+    checkFuel()
 end
