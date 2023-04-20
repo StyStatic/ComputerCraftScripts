@@ -1,5 +1,19 @@
 rednet.open("left")
 
+function awaitPermission()
+    while true do
+        rednet.broadcast("relayproceed")
+        
+        id, message = rednet.receive(3)
+        if message == "proceedrelay" then
+            rednet.broadcast("resetproceed")
+            break
+        end
+
+        sleep(1)
+    end
+end
+
 function findItem(name)
     for search = 16, 1, -1 do
         turtle.select(search)
@@ -96,18 +110,7 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
 end
 
 while true do
-    while true do
-        rednet.broadcast("relayproceed")
-        
-        id, message = rednet.receive()
-        if message == "proceedrelay" then
-            rednet.broadcast("resetproceed")
-            break
-        end
-
-        sleep(0)
-    end
-    
+    awaitPermission()
     crossChunk()
     checkFuel()
     

@@ -32,13 +32,13 @@ function moveLogic()
     while true do
         rednet.broadcast("relaychunk")
         
-        id, message = rednet.receive()
+        id, message = rednet.receive(3)
         if message == "chunksaferelay" then
             rednet.broadcast("resetchunk")
             break
         end
 
-        sleep(0)
+        sleep(1)
     end
 
     for distance = 16, 1, -1 do
@@ -134,6 +134,7 @@ function startMine()
 end
 
 while true do
+    
     if blocksfromlastmine >= 64 then
         startMine()
     end
