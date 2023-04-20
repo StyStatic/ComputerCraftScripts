@@ -1,18 +1,4 @@
-rednet.open("left") 
-
-permission = false
-
-function awaitPermission()
-    while true do
-        id, message = rednet.receive()
-        if message == "proceed" then
-            permission = true
-            break
-        end
-
-        sleep(0)
-    end
-end
+rednet.open("left")
 
 function findItem(name)
     for search = 16, 1, -1 do
@@ -28,7 +14,7 @@ function findItem(name)
 end
 
 function checkFuel()
-    if (turtle.getFuelLevel() / turtle.getFuelLimit()) >= 0.5 then
+    if (turtle.getFuelLevel() / turtle.getFuelLimit()) <= 0.5 then
         turtle.select(findItem("linkedstorage:ender_chest"))
         turtle.place()
 
@@ -73,6 +59,7 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
     turtle.turnLeft()
     placeLoader()
 
+    sleep(5)
     rednet.broadcast("chunksafe")
     permission = false
 
@@ -108,14 +95,21 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
     end
 end
 
-
-thread = coroutine.create(awaitPermission) -- Starts Coroutine
-coroutine.resume(thread)
-
 while true do
-    if permission == true then
-        permission = false
-        crossChunk()
-        checkFuel()
+    while true do
+        rednet.broadcast("relayproceed")
+        
+        id, message = rednet.receive()
+        if message == "proceedrelay" then
+            rednet.broadcast("resetproceed")
+            break
+        end
+
+        sleep(0)
     end
+    
+    crossChunk()
+    checkFuel()
+    
+    sleep(0)
 end

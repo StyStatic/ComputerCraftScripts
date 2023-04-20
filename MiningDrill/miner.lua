@@ -1,12 +1,6 @@
 rednet.open("left")
 blocksfromlastmine = 64
 
-function broadcastProceed() 
-    while true do
-        rednet.broadcast("proceed")
-    end
-end
-
 function findItem(name)
     for search = 16, 1, -1 do
         turtle.select(search)
@@ -21,7 +15,7 @@ function findItem(name)
 end
 
 function checkFuel()
-    if (turtle.getFuelLevel() / turtle.getFuelLimit()) >= 0.5 then
+    if (turtle.getFuelLevel() / turtle.getFuelLimit()) <= 0.5 then
         turtle.select(findItem("linkedstorage:ender_chest"))
         turtle.place()
 
@@ -33,13 +27,14 @@ function checkFuel()
 end
 
 function moveLogic()
-    thread = coroutine.create(broadcastProceed)
-    coroutine.resume(thread)
+    rednet.broadcast("proceed")
 
     while true do
+        rednet.broadcast("relaychunk")
+        
         id, message = rednet.receive()
-        if message == "chunksafe" then
-            coroutine.close(thread)
+        if message == "chunksaferelay" then
+            rednet.broadcast("resetchunk")
             break
         end
 
