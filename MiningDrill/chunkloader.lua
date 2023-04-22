@@ -1,5 +1,12 @@
 rednet.open("left")
 
+function checkTimeSafe()
+    if os.time("utc") >= 23 then
+        print("Machine will restart after Server Restart")
+        error()
+    end
+end
+
 function awaitPermission()
     while true do
         rednet.broadcast("relayproceed")
@@ -73,7 +80,6 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
     turtle.turnLeft()
     placeLoader()
 
-    sleep(5)
     rednet.broadcast("chunksafe")
     permission = false
 
@@ -83,6 +89,7 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
     turtle.forward()
     turtle.turnLeft()
     turtle.down()
+    sleep(7)
     turtle.dig()
 
     turtle.turnLeft()
@@ -113,6 +120,7 @@ while true do
     awaitPermission()
     crossChunk()
     checkFuel()
+    checkTimeSafe()
     
     sleep(0)
 end

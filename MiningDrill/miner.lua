@@ -1,6 +1,13 @@
 rednet.open("left")
 blocksfromlastmine = 64
 
+function checkTimeSafe()
+    if os.time("utc") >= 23 then
+        print("Machine will restart after Server Restart")
+        error()
+    end
+end
+
 function findItem(name)
     for search = 16, 1, -1 do
         turtle.select(search)
@@ -34,6 +41,7 @@ function moveLogic()
         
         id, message = rednet.receive(3)
         if message == "chunksaferelay" then
+            sleep(1)
             rednet.broadcast("resetchunk")
             break
         end
@@ -141,4 +149,5 @@ while true do
 
     moveLogic()
     checkFuel()
+    checkTimeSafe()
 end
