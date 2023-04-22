@@ -1,7 +1,7 @@
 rednet.open("left")
 
 function checkTimeSafe()
-    if os.time("utc") >= 23 then
+    if (os.time("utc") >= 22) and (os.time("utc") < 23) then
         print("Machine will restart after Server Restart")
         error()
     end
@@ -13,6 +13,7 @@ function awaitPermission()
         
         id, message = rednet.receive(3)
         if message == "proceedrelay" then
+            sleep(1)
             rednet.broadcast("resetproceed")
             break
         end
