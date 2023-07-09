@@ -23,7 +23,7 @@ end
 
 function checkFuel()
     if (turtle.getFuelLevel() / turtle.getFuelLimit()) <= 0.5 then
-        turtle.select(findItem("linkedstorage:ender_chest"))
+        turtle.select(findItem("enderstorage:ender_chest"))
         turtle.place()
 
         turtle.suck(64)
@@ -34,15 +34,15 @@ function checkFuel()
 end
 
 function moveLogic()
-    rednet.broadcast("proceed")
+    rednet.broadcast("proceed", "POST")
 
     while true do
-        rednet.broadcast("relaychunk")
+        rednet.broadcast("relaychunk", "GET")
         
-        id, message = rednet.receive(3)
+        id, message = rednet.receive("SENDMINER", 3)
         if message == "chunksaferelay" then
             sleep(1)
-            rednet.broadcast("resetchunk")
+            rednet.broadcast("resetchunk", "POST")
             break
         end
 

@@ -9,12 +9,12 @@ end
 
 function awaitPermission()
     while true do
-        rednet.broadcast("relayproceed")
+        rednet.broadcast("relayproceed", "GET")
         
-        id, message = rednet.receive(3)
+        id, message = rednet.receive("SENDCHUNK", 3)
         if message == "proceedrelay" then
             sleep(1)
-            rednet.broadcast("resetproceed")
+            rednet.broadcast("resetproceed", "POST")
             break
         end
 
@@ -37,7 +37,7 @@ end
 
 function checkFuel()
     if (turtle.getFuelLevel() / turtle.getFuelLimit()) <= 0.5 then
-        turtle.select(findItem("linkedstorage:ender_chest"))
+        turtle.select(findItem("enderstorage:ender_chest"))
         turtle.place()
 
         turtle.suck(64)
@@ -51,7 +51,7 @@ function placeLoader()
     for search = 16, 1, -1 do
         turtle.select(search)
         if turtle.getItemDetail() ~= nil then
-            if turtle.getItemDetail().name == "mekanism:quantum_entangloporter" then -- Chunk loader
+            if turtle.getItemDetail().name == "mekanism:teleporter" then -- Chunk loader
                 turtle.place()
                 break
             end
@@ -81,8 +81,7 @@ function crossChunk() -- Use when L shape away from chunk loader, loader on the 
     turtle.turnLeft()
     placeLoader()
 
-    rednet.broadcast("chunksafe")
-    permission = false
+    rednet.broadcast("chunksafe", "POST")
 
     turtle.up()
     turtle.forward()
